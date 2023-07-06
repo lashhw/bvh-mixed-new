@@ -6,13 +6,11 @@
 #include <bvh/single_ray_traverser.hpp>
 #include <bvh/primitive_intersectors.hpp>
 #include "happly.h"
-#include "mark.hpp"
+#include "marker.hpp"
 
-typedef bvh::Bvh<float> bvh_t;
 typedef bvh::Triangle<float> triangle_t;
 typedef bvh::Vector3<float> vector_t;
 typedef bvh::Ray<float> ray_t;
-typedef bvh::BoundingBox<float> bbox_t;
 typedef bvh_t::Node node_t;
 typedef bvh::SweepSahBuilder<bvh_t> builder_t;
 typedef bvh::SingleRayTraverser<bvh_t> traverser_t;
@@ -55,4 +53,7 @@ int main(int argc, char *argv[]) {
     bvh_t bvh;
     builder_t builder(bvh);
     builder.build(global_bbox, bboxes.get(), centers.get(), triangles.size());
+
+    std::cout << "marking..." << std::endl;
+    Marker marker(mantissa_width, exponent_width);
 }
