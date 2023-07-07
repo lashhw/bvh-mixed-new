@@ -177,15 +177,16 @@ struct LPOperator {
 
             bvh::Bvh<float>::Node &node = bvh.nodes[curr];
             if (node.is_leaf())
-                cost += (float)node.primitive_count * actual_half_area[curr];
+                cost += actual_half_area[curr] * (float)node.primitive_count;
             else {
                 for (int i = 0; i <= 1; i++) {  // 0 for left child, 1 for right child
-                    q_2.push(node.first_child_or_primitive + i);
-                    bvh::Bvh<float>::Node &child_node = bvh.nodes[node.first_child_or_primitive + i];
+                    size_t child_idx = node.first_child_or_primitive + i;
+                    q_2.push(child_idx);
+                    bvh::Bvh<float>::Node &child_node = bvh.nodes[child_idx];
                     if (child_node.low_precision)
-                        cost += t_bbox_lp * actual_half_area[curr];
+                        cost += actual_half_area[curr] * t_bbox_lp;
                     else
-                        cost += t_bbox_hp * actual_half_area[curr];
+                        cost += actual_half_area[curr] * t_bbox_hp;
                 }
             }
         }
