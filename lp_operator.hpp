@@ -147,7 +147,7 @@ struct LPOperator {
     float sah_cost(bvh_t &bvh, float t_bbox_hp, float t_bbox_lp) {
         // fill actual half data
         std::vector<float> actual_half_area(bvh.node_count);
-        std::queue<std::pair<int, bbox_t>> q_1;
+        std::queue<std::pair<size_t, bbox_t>> q_1;
         q_1.emplace(0, bbox_t::full());
         while (!q_1.empty()) {
             auto [idx, parent_bbox] = q_1.front();
