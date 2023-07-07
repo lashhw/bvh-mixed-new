@@ -44,6 +44,7 @@ struct LPOperator {
                 lp_bbox_.max[i] = mpfr_get_flt(tmp, MPFR_RNDU);
             }
         }
+        return lp_bbox_;
     }
 
     void mark(bvh_t &bvh, float t_bbox_hp, float t_bbox_lp) {
