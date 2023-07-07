@@ -26,17 +26,17 @@ struct LPOperator {
         }
     }
 
-    bbox_t lp_bbox(const bbox_t &bbox, int r) {  // r: (MSB)zmax-zmin-ymax-ymin-xmax-xmin(LSB), true if hp
+    bbox_t lp_bbox(const bbox_t &bbox, int bitmask) {  // r: (MSB)zmax-zmin-ymax-ymin-xmax-xmin(LSB), true if hp
         bbox_t lp_bbox_{};
         for (int i = 0; i < 3; i++) {
-            if ((r >> (i * 2)) & 1) {
+            if ((bitmask >> (i * 2)) & 1) {
                 lp_bbox_.min[i] = bbox.min[i];
             } else {
                 mpfr_set_flt(tmp, bbox.min[i], MPFR_RNDD);
                 check_exponent_and_set_inf(tmp);
                 lp_bbox_.min[i] = mpfr_get_flt(tmp, MPFR_RNDD);
             }
-            if ((r >> (i * 2 + 1)) & 1) {
+            if ((bitmask >> (i * 2 + 1)) & 1) {
                 lp_bbox_.max[i] = bbox.max[i];
             } else {
                 mpfr_set_flt(tmp, bbox.max[i], MPFR_RNDU);
