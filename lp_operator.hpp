@@ -26,7 +26,7 @@ struct LPOperator {
         }
     }
 
-    bbox_t lp_bbox(const bbox_t &bbox, int bitmask) {  // r: (MSB)zmax-zmin-ymax-ymin-xmax-xmin(LSB), true if hp
+    bbox_t lp_bbox(const bbox_t &bbox, int bitmask) {  // bitmask: (MSB)zmax-zmin-ymax-ymin-xmax-xmin(LSB), true if hp
         bbox_t lp_bbox_{};
         for (int i = 0; i < 3; i++) {
             if ((bitmask >> (i * 2)) & 1) {
