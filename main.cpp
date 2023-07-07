@@ -6,7 +6,7 @@
 #include <bvh/single_ray_traverser.hpp>
 #include <bvh/primitive_intersectors.hpp>
 #include "happly.h"
-#include "marker.hpp"
+#include "lp_operator.hpp"
 
 typedef bvh::Triangle<float> triangle_t;
 typedef bvh::Vector3<float> vector_t;
@@ -19,6 +19,8 @@ typedef traverser_t::Statistics statistics_t;
 
 const mpfr_prec_t mantissa_width = 7;
 const mpfr_exp_t exponent_width = 8;
+const float t_bbox_hp = 0.5;
+const float t_bbox_lp = 0.47;
 
 int main(int argc, char *argv[]) {
     if (argc != 3) {
@@ -38,9 +40,9 @@ int main(int argc, char *argv[]) {
 
     std::vector<triangle_t> triangles;
     for (auto &face : f_idx) {
-        triangles.emplace_back(vector_t(v_pos[face[0]][0], v_pos[face[0]][1], v_pos[face[0]][2]),
-                               vector_t(v_pos[face[1]][0], v_pos[face[1]][1], v_pos[face[1]][2]),
-                               vector_t(v_pos[face[2]][0], v_pos[face[2]][1], v_pos[face[2]][2]));
+        triangles.emplace_back(vector_t((float)v_pos[face[0]][0], (float)v_pos[face[0]][1], (float)v_pos[face[0]][2]),
+                               vector_t((float)v_pos[face[1]][0], (float)v_pos[face[1]][1], (float)v_pos[face[1]][2]),
+                               vector_t((float)v_pos[face[2]][0], (float)v_pos[face[2]][1], (float)v_pos[face[2]][2]));
     }
 
     auto [bboxes, centers] = bvh::compute_bounding_boxes_and_centers(triangles.data(), triangles.size());
@@ -54,6 +56,12 @@ int main(int argc, char *argv[]) {
     builder_t builder(bvh);
     builder.build(global_bbox, bboxes.get(), centers.get(), triangles.size());
 
+    LPOperator lp_op(mantissa_width, exponent_width);
+    float before_sah_cost = lp_op.sah_cost(bvh, t_bbox_hp, t_bbox_lp);
+    std::cout << "SAH cost before marking: " << before_sah_cost << std::endl;
+
     std::cout << "marking..." << std::endl;
-    Marker marker(mantissa_width, exponent_width);
+    lp_op.mark(bvh, t_bbox_hp, t_bbox_lp);
+    float after_sah_cost = lp_op.sah_cost(bvh, t_bbox_hp, t_bbox_lp);
+    std::cout << "SAH cost after marking: " << after_sah_cost << std::endl;
 }
