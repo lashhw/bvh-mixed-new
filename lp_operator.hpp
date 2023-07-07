@@ -159,7 +159,7 @@ struct LPOperator {
                 tmp_bbox.shrink(lp_bbox(bvh.nodes[idx].bounding_box_proxy().to_bounding_box(), 0b000000));
                 actual_half_area[idx] = tmp_bbox.half_area();
             } else {
-                tmp_bbox = bvh.nodes[idx].bounding_box_proxy();
+                tmp_bbox = bvh.nodes[idx].bounding_box_proxy().to_bounding_box();
                 actual_half_area[idx] = tmp_bbox.half_area();
             }
             if (!bvh.nodes[idx].is_leaf()) {
