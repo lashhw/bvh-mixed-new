@@ -51,7 +51,7 @@ struct LPOperator {
         std::vector<int> r(bvh.node_count);  // r[child]: which planes are shared b/t parent and child
         std::vector<float> c_hp(bvh.node_count);  // c_hp[node]: optimal cost when node is in hp
         std::vector<std::array<float, 64>> c_lp(bvh.node_count);  // c_lp[node][bitmask]: optimal cost when node is in
-        // lp and which planes are in hp is indicated by bitmask
+                                                                  // lp and which planes are in hp is indicated by bitmask
         std::vector<std::array<bool, 2>> p_hp(bvh.node_count);  // c_hp[node]: (left_lp, right_lp)
         std::vector<std::array<std::array<bool, 2>, 64>> p_lp(bvh.node_count);  // c_lp[node][bitmask]: (left_lp, right_lp)
 
