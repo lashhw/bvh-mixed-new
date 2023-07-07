@@ -3,6 +3,7 @@
 
 typedef bvh::Bvh<float> bvh_t;
 typedef bvh::BoundingBox<float> bbox_t;
+typedef bvh_t::Node node_t;
 
 struct LPOperator {
     mpfr_t tmp{};
@@ -175,14 +176,14 @@ struct LPOperator {
             size_t curr = q_2.front();
             q_2.pop();
 
-            bvh::Bvh<float>::Node &node = bvh.nodes[curr];
+            node_t &node = bvh.nodes[curr];
             if (node.is_leaf())
                 cost += actual_half_area[curr] * (float)node.primitive_count;
             else {
                 for (int i = 0; i <= 1; i++) {  // 0 for left child, 1 for right child
                     size_t child_idx = node.first_child_or_primitive + i;
                     q_2.push(child_idx);
-                    bvh::Bvh<float>::Node &child_node = bvh.nodes[child_idx];
+                    node_t &child_node = bvh.nodes[child_idx];
                     if (child_node.low_precision)
                         cost += actual_half_area[curr] * t_bbox_lp;
                     else
